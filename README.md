@@ -27,14 +27,19 @@ Subfolders are searched too.
 You soul is also searched, but DirectoryNotFound.
 
 # Changes from Oggify
-core/src/spotify_id.rs changed to use std u128, was using some old ass crate to do it before.
-librespot a3c63b4e055f3ec68432d4a27479bed102e68e9e files are now local. because.
-the CSV/M3U shit, obviously.
-File names are mostly sanitized for Windows.
-The code is formatted and 10x uglier than before.
+*core/src/spotify_id.rs changed to use std u128, was using some old ass crate to do it before.
+
+*librespot a3c63b4e055f3ec68432d4a27479bed102e68e9e files are now local. because.
+
+*The CSV/M3U shit, obviously.
+
+*File names are mostly sanitized for Windows.
+
+*The code is formatted and 10x uglier than before.
 
 ## Should this exist?
 Probably not.  Go support the artists.  I made this for selfish reasons.
+
 The only reason I'm sharing this is so that people don't pay for malware to do the same thing.
 
 ## Will you update or otherwise support this?
