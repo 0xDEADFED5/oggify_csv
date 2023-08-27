@@ -242,7 +242,7 @@ fn main() {
             m3u_writer.write_entry(e).unwrap();
         }
         m3u_writer.flush().unwrap();
-        info!("M3U '{}' finished.",&m3u_path.display());
+        info!("M3U '{}' finished.", &m3u_path.display());
     }
     println!("Press any key to continue...");
     let _ = std::io::Read::read(&mut std::io::stdin(), &mut [0u8]).unwrap();

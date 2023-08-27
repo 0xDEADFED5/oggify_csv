@@ -40,7 +40,7 @@ You soul is also searched, but DirectoryNotFound.
 ## Should this exist?
 Probably not.  Go support the artists.  I made this for selfish reasons.
 
-The only reason I'm sharing this is so that people don't pay for malware to do the same thing.
+I'm sharing this is so that people don't pay for malware to do the same thing.
 
 ## Will you update or otherwise support this?
 Fuck no, I spent as much of my life on this shit thing as I ever intend to.
