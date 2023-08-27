@@ -1,0 +1,25 @@
+[package]
+name = "oggify_csv"
+version = "0.1.0"
+authors = ["Lorenzo Pistone <blaffablaffa@gmail.com>", "DEADFED5"]
+edition = "2018"
+license = "MIT"
+description = "Download Spotify playlists to Ogg Vorbis format with a Premium account"
+keywords = ["spotify"]
+repository = "https://github.com/0xDEADFED5/oggify-csv"
+readme = "README.md"
+
+[dependencies]
+tokio-core = "0.1.17"
+librespot-core = { path = "core" }
+librespot-metadata = { path = "metadata" }
+librespot-audio = { path = "audio" }
+regex = "1.1.0"
+log = "0.4.6"
+env_logger = "0.6.0"
+scoped_threadpool = "0.1.9"
+m3u = "1.0.0"
+csv = "1.2.2"
+dateparser = "0.2.0"
+chrono = "0.4.26"
+linear-map = "1.0"

@@ -1,0 +1,41 @@
+[package]
+name = "librespot-core"
+version = "0.1.0"
+authors = ["Paul Lietar <paul@lietar.net>"]
+build = "build.rs"
+
+[dependencies.librespot-protocol]
+path = "../protocol"
+
+[dependencies]
+base64 = "0.5.0"
+byteorder = "1.0"
+bytes = "0.4"
+error-chain = { version = "0.11.0", default_features = false }
+#extprim = "=1.5.1"
+#extprim = { path = "extprim-master" }
+futures = "0.1.8"
+httparse = "1.2.4"
+hyper = "0.11.2"
+hyper-proxy = { version = "0.4.1", default_features = false }
+lazy_static = "0.2.0"
+log = "0.3.5"
+num-bigint = "0.1.35"
+num-integer = "0.1.32"
+num-traits = "0.1.36"
+protobuf = "2.0.5"
+rand = "0.3.13"
+rpassword = "0.3.0"
+rust-crypto = "0.2.36"
+serde = "0.9.6"
+serde_derive = "0.9.6"
+serde_json = "0.9.5"
+shannon = "0.2.0"
+tokio-core = "0.1.2"
+tokio-io = "0.1"
+url = "1.7.0"
+uuid = { version = "0.4", features = ["v4"] }
+
+[build-dependencies]
+rand = "0.3.13"
+vergen = "0.1.0"
