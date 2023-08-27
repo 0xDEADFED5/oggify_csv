@@ -2,13 +2,20 @@
 Download Spotify CSV playlists to M3U + Ogg Vorbis (with a premium account).
 
 This is a fork of what used to be [oggify](https://github.com/pisto/oggify).
+
 This uses an older version of [librespot](https://github.com/librespot-org/librespot).
+
 This code is some hacky bullshit, plz don't judge me.
 
 # Usage
 First, export your playlists with [Exportify](https://watsonbox.github.io/exportify/) and unzip them somewhere.
-oggify_csv will process each CSV file, create a folder, save playlist tracks inside that folder, and generate an M3U playlist alongside the CSV file.
+
+oggify_csv will process each CSV file,
+create a folder, save playlist tracks inside that folder,
+and generate an M3U playlist alongside the CSV file.
+
 Tracks are named like this: `artist - album (year) - disc - track - track name`
+
 For instance: `Bil Bless - Life Mechanism (1 of 2) (2009) - D01 - T02 - Wanting You.ogg`
 
 ```
