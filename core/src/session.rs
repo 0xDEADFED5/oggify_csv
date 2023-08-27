@@ -2,7 +2,7 @@ use bytes::Bytes;
 use futures::sync::mpsc;
 use futures::{Async, Future, IntoFuture, Poll, Stream};
 use std::io;
-use std::sync::atomic::{AtomicUsize, Ordering, ATOMIC_USIZE_INIT};
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, RwLock, Weak};
 use tokio_core::reactor::{Handle, Remote};
 
