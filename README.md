@@ -11,7 +11,7 @@ This code is some hacky bullshit, plz don't judge me.
 First, export your playlists with [Exportify](https://watsonbox.github.io/exportify/) and unzip them somewhere.
 
 oggify_csv will process each CSV file,
-create a folder, save playlist tracks inside that folder,
+create a folder, save tracks inside that folder,
 and generate an M3U playlist alongside the CSV file.
 
 Tracks are named like this: `artist - album (year) - disc - track - track name`

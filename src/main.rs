@@ -32,7 +32,7 @@ use tokio_core::reactor::Core;
 
 fn sanitize(input: &String) -> String {
     let mut result = input.clone();
-    let ban: &str = r#"/\<>|?*"#;
+    let ban: &str = r#":/\<>|?*"#;
     for c in ban.chars() {
         if result.contains(c) {
             result = result.replace(c, "");
@@ -96,7 +96,6 @@ fn main() {
             return;
         }
     }
-    //assert!(args.len() >= 2, "Usage: {} user password path(optional)", args[0]);
     let mut core = Core::new().unwrap();
     let handle = core.handle();
     let session_config = SessionConfig::default();
@@ -121,18 +120,18 @@ fn main() {
         let mut path = PathBuf::from(&f[0..f.len() - 4]);
         let m3u_path = PathBuf::from(f[0..f.len() - 4].to_string() + ".m3u");
         if m3u_path.exists() {
-            info! {"{} already exists, deleting...", &m3u_path.display()};
+            info! {"'{}' already exists, deleting...", &m3u_path.display()};
             if let Err(e) = fs::remove_file(&m3u_path) {
-                error!("error deleting ({}) : {}", &m3u_path.display(), e);
+                error!("error deleting '{}' : {}", &m3u_path.display(), e);
                 break;
             }
         }
         let mut m3u = File::create(&m3u_path).unwrap();
         let mut m3u_writer = m3u::Writer::new_ext(&mut m3u).unwrap();
         if let Err(e) = create_dir(path.clone()) {
-            warn!("error creating folder ({}): {}", &path.display(), e);
+            warn!("error creating folder '{}': {}", &path.display(), e);
         } else {
-            info!("folder created: {}", &path.display());
+            info!("folder created '{}'", &path.display());
         }
         info!("reading '{}'...", f);
         rdr = csv::Reader::from_path(f).unwrap();
@@ -156,7 +155,7 @@ fn main() {
             // don't download existing files
             path.push(&filename);
             if path.exists() {
-                info!("file exists ({}), skipping...", &path.display());
+                info!("file exists '{}', skipping...", &path.display());
                 entries.push(
                     m3u::path_entry(&path).extend(duration, format!("{} - {}", &r[3], &r[1])),
                 );
@@ -166,18 +165,18 @@ fn main() {
             let id = spotify_uri
                 .captures(&r[0])
                 .or_else(|| {
-                    warn!("cannot parse track from string: {}", &r[0]);
+                    warn!("cannot parse track from string: '{}'", &r[0]);
                     None
                 })
                 .and_then(|capture| SpotifyId::from_base62(&capture[1]).ok())
                 .unwrap();
-            info!("getting track {}...", id.to_base62());
+            info!("getting track '{}' ...", id.to_base62());
             let mut track = core
                 .run(Track::get(&session, id))
                 .expect("cannot get track metadata");
             if !track.available {
                 warn!(
-                    "track {} is not available, finding alternative...",
+                    "track '{}' is not available, finding alternative...",
                     id.to_base62()
                 );
                 let alt_track = track.alternatives.iter().find_map(|id| {
@@ -190,9 +189,9 @@ fn main() {
                     }
                 });
                 if alt_track.is_none() {
-                    error!("could not find alternative for track {}", id.to_base62());
+                    error!("could not find alternative for track '{}'", id.to_base62());
                     error!(
-                        "missing track: {} by {} from {} ({})",
+                        "missing track: '{}' by '{}' from '{}' ({})",
                         &r[1], &r[3], &r[5], year
                     );
                     path.pop();
@@ -200,11 +199,12 @@ fn main() {
                 }
                 track = alt_track.unwrap();
                 warn!(
-                    "found track alternative {} -> {}",
+                    "found track alternative '{}' -> '{}'",
                     id.to_base62(),
                     track.id.to_base62()
                 );
             }
+            // could totally crash here, didn't for me yet.
             let file_id = track
                 .files
                 .get(&FileFormat::OGG_VORBIS_320)
@@ -233,8 +233,8 @@ fn main() {
                 .read_to_end(&mut decrypted_buffer)
                 .expect("cannot decrypt stream");
             std::fs::write(&path, &decrypted_buffer[0xa7..])
-                .expect(format!("cannot write decrypted track to {}", &path.display()).as_str());
-            info!("track downloaded: {}", &path.display());
+                .expect(format!("cannot write decrypted track to '{}'", &path.display()).as_str());
+            info!("track downloaded: '{}'", &path.display());
             entries.push(m3u::path_entry(&path).extend(duration, format!("{} - {}", &r[3], &r[1])));
             path.pop();
         }
@@ -242,6 +242,7 @@ fn main() {
             m3u_writer.write_entry(e).unwrap();
         }
         m3u_writer.flush().unwrap();
+        info!("M3U '{}' finished.",&m3u_path.display());
     }
     println!("Press any key to continue...");
     let _ = std::io::Read::read(&mut std::io::stdin(), &mut [0u8]).unwrap();
