@@ -12,7 +12,7 @@ const AUDIO_AESIV: &'static [u8] = &[
 ];
 
 pub struct AudioDecrypt<T: io::Read> {
-    cipher: Box<SynchronousStreamCipher + 'static>,
+    cipher: Box<dyn SynchronousStreamCipher + 'static>,
     key: AudioKey,
     reader: T,
 }
