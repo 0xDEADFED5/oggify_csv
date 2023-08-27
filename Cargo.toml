@@ -6,7 +6,7 @@ edition = "2018"
 license = "MIT"
 description = "Download Spotify playlists to Ogg Vorbis format with a Premium account"
 keywords = ["spotify"]
-repository = "https://github.com/0xDEADFED5/oggify-csv"
+repository = "https://github.com/0xDEADFED5/oggify_csv"
 readme = "README.md"
 
 [dependencies]
