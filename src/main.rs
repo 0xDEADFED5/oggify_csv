@@ -156,7 +156,7 @@ fn main() {
                 filename = format!("{} - {}.ogg", &r[3], &r[1]);
             }
             filename = sanitize(&filename);
-            let rel_path = format!("{:?}/{}", path.file_stem().unwrap(), filename);
+            let rel_path = format!("{}/{}", path.file_stem().unwrap().to_string_lossy(), filename);
             // don't download existing files
             path.push(&filename);
             if path.exists() {
