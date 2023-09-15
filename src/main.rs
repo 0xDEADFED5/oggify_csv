@@ -29,6 +29,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
 use std::{env, fs};
 use tokio_core::reactor::Core;
+const MAX_LEN: usize = 140;
 
 fn sanitize(input: &String) -> String {
     let mut result = input.clone();
@@ -119,6 +120,8 @@ fn main() {
     for f in files {
         let mut path = PathBuf::from(&f[0..f.len() - 4]);
         let m3u_path = PathBuf::from(f[0..f.len() - 4].to_string() + ".m3u");
+        let m3u_stem = path.file_stem().unwrap().to_string_lossy().to_string();
+
         if m3u_path.exists() {
             info! {"'{}' already exists, deleting...", &m3u_path.display()};
             if let Err(e) = fs::remove_file(&m3u_path) {
@@ -151,13 +154,17 @@ fn main() {
                 "{} - {} ({}) - D{:0>2} - T{:0>2} - {}.ogg",
                 &r[3], &r[5], year, &r[10], &r[11], &r[1]
             );
+            if filename.len() > MAX_LEN {
+                filename = format!("{} - {}.ogg", &r[3], &r[1]);
+            }
             filename = sanitize(&filename);
             // don't download existing files
             path.push(&filename);
             if path.exists() {
+                let rel_path = format!("{}/{}", m3u_stem, filename);
                 info!("file exists '{}', skipping...", &path.display());
                 entries.push(
-                    m3u::path_entry(&path).extend(duration, format!("{} - {}", &r[3], &r[1])),
+                    m3u::path_entry(&rel_path).extend(duration, format!("{} - {}", &r[3], &r[1])),
                 );
                 path.pop();
                 continue;

@@ -14,9 +14,15 @@ oggify_csv will process each CSV file,
 create a folder, save tracks inside that folder,
 and generate an M3U playlist alongside the CSV file.
 
-Tracks are named like this: `artist - album (year) - disc - track - track name`
+Tracks are named like this: `{artist} - {album} (year) - {disc} - {track} - {track name}.ogg`
 
 For instance: `Bil Bless - Life Mechanism (1 of 2) (2009) - D01 - T02 - Wanting You.ogg`
+
+update 2023-09-14:
+
+if file name length is > 140, files are named {artist} - {track name}.ogg
+
+adjust as needed.
 
 ```
 oggify_csv spotify-premium-user spotify-premium-password path_to_CSVs (Optional)
