@@ -35,13 +35,10 @@ fn sanitize(input: &String) -> String {
     let mut result = input.clone();
     let ban: &str = r#":/\<>|?*"#;
     for c in ban.chars() {
-        if result.contains(c) {
-            result = result.replace(c, "");
-        }
+        result = result.replace(c, "");
     }
-    if result.contains("\"") {
-        result = result.replace("\"", "'");
-    }
+    result = result.replace("\"", "'");
+    result = result.replace("#", "%23");
     result
 }
 
@@ -156,7 +153,11 @@ fn main() {
                 filename = format!("{} - {}.ogg", &r[3], &r[1]);
             }
             filename = sanitize(&filename);
-            let rel_path = format!("{}/{}", path.file_stem().unwrap().to_string_lossy(), filename);
+            let rel_path = format!(
+                "{}/{}",
+                path.file_stem().unwrap().to_string_lossy(),
+                filename
+            );
             // don't download existing files
             path.push(&filename);
             if path.exists() {
@@ -240,7 +241,9 @@ fn main() {
             std::fs::write(&path, &decrypted_buffer[0xa7..])
                 .expect(format!("cannot write decrypted track to '{}'", &path.display()).as_str());
             info!("track downloaded: '{}'", &path.display());
-            entries.push(m3u::path_entry(&rel_path).extend(duration, format!("{} - {}", &r[3], &r[1])));
+            entries.push(
+                m3u::path_entry(&rel_path).extend(duration, format!("{} - {}", &r[3], &r[1])),
+            );
             path.pop();
         }
         for e in &entries {
