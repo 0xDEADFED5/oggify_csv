@@ -39,6 +39,7 @@ fn sanitize(input: &String) -> String {
     }
     result = result.replace("\"", "'");
     result = result.replace("#", "%23");
+    result = result.replace(" ", "_");
     result
 }
 
@@ -115,8 +116,10 @@ fn main() {
     info!("{} CSV files found", files.len());
     let mut rdr;
     for f in files {
-        let mut path = PathBuf::from(&f[0..f.len() - 4]);
-        let m3u_path = PathBuf::from(f[0..f.len() - 4].to_string() + ".m3u");
+        let s = sanitize(&f[0..f.len() - 4].to_string());
+        let mut path = PathBuf::from(&s);
+        let m3u_path = PathBuf::from(s + ".m3u");
+
         if m3u_path.exists() {
             info! {"'{}' already exists, deleting...", &m3u_path.display()};
             if let Err(e) = fs::remove_file(&m3u_path) {
@@ -146,11 +149,12 @@ fn main() {
             let duration = *(&r[12].parse::<u32>().unwrap()) as f64 / 1000.0;
             // artist - album (year) - disc - track - track name
             let mut filename = format!(
-                "{} - {} ({}) - D{:0>2} - T{:0>2} - {}.ogg",
+                "{}-{}({})-D{:0>2}-T{:0>2}-{}.ogg",
                 &r[3], &r[5], year, &r[10], &r[11], &r[1]
             );
-            if filename.len() > MAX_LEN {
-                filename = format!("{} - {}.ogg", &r[3], &r[1]);
+            filename = filename.replace(", ", ",");
+            if filename.len() + path.to_string_lossy().len() + 1 > MAX_LEN {
+                filename = format!("{}-{}.ogg", &r[3], &r[1]);
             }
             filename = sanitize(&filename);
             let rel_path = format!(

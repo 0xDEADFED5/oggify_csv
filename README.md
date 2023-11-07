@@ -1,4 +1,6 @@
 # oggify_csv
+Update 6 November, 2023:  File names updated to replace spaces with underscores, files will be redownloaded if you run the new program, so if you have existing music folders delete them first
+
 Download Spotify CSV playlists to M3U + Ogg Vorbis (with a premium account).
 
 This is a fork of what used to be [oggify](https://github.com/pisto/oggify).
@@ -14,9 +16,9 @@ oggify_csv will process each CSV file,
 create a folder, save tracks inside that folder,
 and generate an M3U playlist alongside the CSV file.
 
-Tracks are named like this: `{artist} - {album} (year) - {disc} - {track} - {track name}.ogg`
+Tracks are named like this: `{artist}-{album}(year)-{disc}-{track}-{track name}.ogg`
 
-For instance: `Bil Bless - Life Mechanism (1 of 2) (2009) - D01 - T02 - Wanting You.ogg`
+For instance: `Bil_Bless-Life_Mechanism_(1_of_2)(2009)-D01-T02-Wanting_You.ogg`
 
 update 2023-09-14:
 
