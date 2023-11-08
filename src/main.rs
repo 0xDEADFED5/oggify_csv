@@ -29,7 +29,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
 use std::{env, fs};
 use tokio_core::reactor::Core;
-const MAX_LEN: usize = 140;
+const MAX_LEN: usize = 240;
 
 fn sanitize(input: &String) -> String {
     let mut result = input.clone();
@@ -76,6 +76,12 @@ fn scan_folder(path: &PathBuf) -> std::result::Result<Vec<String>, Box<dyn Error
         .map(|r| r.to_string_lossy().to_string())
         .collect())
 }
+fn truncate(s: &str, max_chars: usize) -> &str {
+    match s.char_indices().nth(max_chars) {
+        None => s,
+        Some((idx, _)) => &s[..idx],
+    }
+}
 fn main() {
     Builder::from_env(Env::default().default_filter_or("info")).init();
     let args: Vec<_> = env::args().collect();
@@ -116,9 +122,8 @@ fn main() {
     info!("{} CSV files found", files.len());
     let mut rdr;
     for f in files {
-        let s = sanitize(&f[0..f.len() - 4].to_string());
-        let mut path = PathBuf::from(&s);
-        let m3u_path = PathBuf::from(s + ".m3u");
+        let mut path = PathBuf::from(&f[0..f.len() - 4]);
+        let m3u_path = PathBuf::from(f[0..f.len() - 4].to_string() + ".m3u");
 
         if m3u_path.exists() {
             info! {"'{}' already exists, deleting...", &m3u_path.display()};
@@ -152,10 +157,35 @@ fn main() {
                 "{}-{}({})-D{:0>2}-T{:0>2}-{}.ogg",
                 &r[3], &r[5], year, &r[10], &r[11], &r[1]
             );
-            filename = filename.replace(", ", ",");
+            // had a track with like 50 artists on it, this is the hacky fix
             if filename.len() + path.to_string_lossy().len() + 1 > MAX_LEN {
-                filename = format!("{}-{}.ogg", &r[3], &r[1]);
+                let max_artist_len = MAX_LEN - &r[1].len() - 5;
+                if r[3].len() > max_artist_len {
+                    if r[3].contains(',') {
+                        let mut index = 0;
+                        // find last comma and truncate
+                        for (i, c) in r[3].chars().enumerate() {
+                            if c == ',' {
+                                index = i;
+                            }
+                            if i > max_artist_len { break; }
+                        }
+                        if index != 0 {
+                            filename = format!("{},etc.-{}.ogg", truncate(&r[3], index - 1), &r[1]);
+                        }
+                        else {
+                            filename = format!("{}...-{}.ogg", truncate(&r[3], max_artist_len), &r[1]);
+                        }
+                    }
+                    else {
+                        filename = format!("{}...-{}.ogg", truncate(&r[3], max_artist_len), &r[1]);
+                    }
+                }
+                else {
+                    filename = format!("{}-{}.ogg", &r[3], &r[1]);
+                }
             }
+            filename = filename.replace(", ", ",");
             filename = sanitize(&filename);
             let rel_path = format!(
                 "{}/{}",
