@@ -1,5 +1,5 @@
 # oggify_csv
-Update 6 November, 2023:  File names updated to replace spaces with underscores, files will be redownloaded if you run the new program, so if you have existing music folders delete them first
+Update 7 November, 2023:  I broke it yesterday, oops.  Also, fix file length issues due to like 50 artists on one track.
 
 Download Spotify CSV playlists to M3U + Ogg Vorbis (with a premium account).
 
