@@ -38,8 +38,13 @@ fn sanitize(input: &String) -> String {
         result = result.replace(c, "");
     }
     result = result.replace("\"", "'");
-    result = result.replace("#", "%23");
     result = result.replace(" ", "_");
+    result
+}
+
+fn encode(input: &String) -> String {
+    let mut result = input.clone();
+    result = result.replace("#", "%23");
     result
 }
 
@@ -145,11 +150,27 @@ fn main() {
         for r in rdr.records() {
             let r = r.unwrap();
             let year;
+            // found an entry called '1967-09' that was crashing here..what does 1967-09 even mean??
             if r[8].len() == 4 {
                 // -_-
                 year = *(&r[8].parse::<i32>().unwrap());
             } else {
-                year = parse(&r[8]).unwrap().year();
+                match parse(&r[8]) {
+                    Ok(d) => {
+                        year = d.year();
+                    }
+                    Err(_) => {
+                        match parse(&r[8][0..4]) {
+                            Ok(d) => {
+                                year = d.year();
+                            }
+                            Err(_) => {
+                                year = 1666;
+                            }
+                        }
+                    }
+                }
+                //year = parse(&r[8]).unwrap().year();
             }
             let duration = *(&r[12].parse::<u32>().unwrap()) as f64 / 1000.0;
             // artist - album (year) - disc - track - track name
@@ -163,7 +184,7 @@ fn main() {
                 if r[3].len() > max_artist_len {
                     if r[3].contains(',') {
                         let mut index = 0;
-                        // find last comma and truncate
+                        // find last comma before limit and truncate
                         for (i, c) in r[3].chars().enumerate() {
                             if c == ',' {
                                 index = i;
@@ -197,7 +218,7 @@ fn main() {
             if path.exists() {
                 info!("file exists '{}', skipping...", &path.display());
                 entries.push(
-                    m3u::path_entry(&rel_path).extend(duration, format!("{} - {}", &r[3], &r[1])),
+                    m3u::path_entry(encode(&rel_path)).extend(duration, format!("{} - {}", &r[3], &r[1])),
                 );
                 path.pop();
                 continue;
@@ -276,7 +297,7 @@ fn main() {
                 .expect(format!("cannot write decrypted track to '{}'", &path.display()).as_str());
             info!("track downloaded: '{}'", &path.display());
             entries.push(
-                m3u::path_entry(&rel_path).extend(duration, format!("{} - {}", &r[3], &r[1])),
+                m3u::path_entry(encode(&rel_path)).extend(duration, format!("{} - {}", &r[3], &r[1])),
             );
             path.pop();
         }
