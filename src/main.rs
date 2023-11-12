@@ -151,26 +151,18 @@ fn main() {
             let r = r.unwrap();
             let year;
             // found an entry called '1967-09' that was crashing here..what does 1967-09 even mean??
-            if r[8].len() == 4 {
-                // -_-
-                year = *(&r[8].parse::<i32>().unwrap());
-            } else {
-                match parse(&r[8]) {
+            match parse(&r[8]) {
+                Ok(d) => {
+                    year = d.year();
+                }
+                Err(_) => match parse(&r[8][0..4]) {
                     Ok(d) => {
                         year = d.year();
                     }
                     Err(_) => {
-                        match parse(&r[8][0..4]) {
-                            Ok(d) => {
-                                year = d.year();
-                            }
-                            Err(_) => {
-                                year = 1666;
-                            }
-                        }
+                        year = 1666;
                     }
-                }
-                //year = parse(&r[8]).unwrap().year();
+                },
             }
             let duration = *(&r[12].parse::<u32>().unwrap()) as f64 / 1000.0;
             // artist - album (year) - disc - track - track name
@@ -189,20 +181,20 @@ fn main() {
                             if c == ',' {
                                 index = i;
                             }
-                            if i > max_artist_len { break; }
+                            if i > max_artist_len {
+                                break;
+                            }
                         }
                         if index != 0 {
                             filename = format!("{},etc.-{}.ogg", truncate(&r[3], index - 1), &r[1]);
+                        } else {
+                            filename =
+                                format!("{}...-{}.ogg", truncate(&r[3], max_artist_len), &r[1]);
                         }
-                        else {
-                            filename = format!("{}...-{}.ogg", truncate(&r[3], max_artist_len), &r[1]);
-                        }
-                    }
-                    else {
+                    } else {
                         filename = format!("{}...-{}.ogg", truncate(&r[3], max_artist_len), &r[1]);
                     }
-                }
-                else {
+                } else {
                     filename = format!("{}-{}.ogg", &r[3], &r[1]);
                 }
             }
@@ -218,7 +210,8 @@ fn main() {
             if path.exists() {
                 info!("file exists '{}', skipping...", &path.display());
                 entries.push(
-                    m3u::path_entry(encode(&rel_path)).extend(duration, format!("{} - {}", &r[3], &r[1])),
+                    m3u::path_entry(encode(&rel_path))
+                        .extend(duration, format!("{} - {}", &r[3], &r[1])),
                 );
                 path.pop();
                 continue;
@@ -297,7 +290,8 @@ fn main() {
                 .expect(format!("cannot write decrypted track to '{}'", &path.display()).as_str());
             info!("track downloaded: '{}'", &path.display());
             entries.push(
-                m3u::path_entry(encode(&rel_path)).extend(duration, format!("{} - {}", &r[3], &r[1])),
+                m3u::path_entry(encode(&rel_path))
+                    .extend(duration, format!("{} - {}", &r[3], &r[1])),
             );
             path.pop();
         }
