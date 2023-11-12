@@ -150,12 +150,16 @@ fn main() {
         for r in rdr.records() {
             let r = r.unwrap();
             let year;
+            let mut range = 4;
+            if range > r[8].len() {
+                range = r[8].len();
+            }
             // found an entry called '1967-09' that was crashing here..what does 1967-09 even mean??
             match parse(&r[8]) {
                 Ok(d) => {
                     year = d.year();
                 }
-                Err(_) => match parse(&r[8][0..4]) {
+                Err(_) => match parse(&r[8][0..range]) {
                     Ok(d) => {
                         year = d.year();
                     }
