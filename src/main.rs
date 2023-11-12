@@ -168,7 +168,7 @@ fn main() {
                     }
                 },
             }
-            let duration = *(&r[12].parse::<u32>().unwrap()) as f64 / 1000.0;
+            let duration = r[12].parse::<u32>().unwrap() as f64 / 1000.0;
             // artist - album (year) - disc - track - track name
             let mut filename = format!(
                 "{}-{}({})-D{:0>2}-T{:0>2}-{}.ogg",
