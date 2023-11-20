@@ -63,3 +63,10 @@ previous update changed how album years are done.
 i don't know why i thought dateparser could parse years as a date, but it seemed reasonable at the time.  
 in fact it cannot, so a bunch of tracks got named with album year as 1666, a value that i didn't think would get used.
 this is fixed, and old tracks will be renamed automatically without redownloading them.
+
+sometimes the metadata kinda sucks, too. take this wordy filename for example:  
+
+MDC-Millions_of_Dead_Cops_-_Millennium_Edition_(Remastered)(1980)-D01-T07-John_Wayne_Was_a_Nazi_-_Millions_of_Dead_Cops_-_Full_Length.ogg  
+
+yes, the track name really is "John Wayne Was a Nazi - Millions of Dead Cops - Full Length".  why? fuck if i know, but John Wayne was kind of a Nazi.
+
