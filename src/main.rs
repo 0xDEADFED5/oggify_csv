@@ -24,7 +24,7 @@ use scoped_threadpool::Pool;
 use std::error::Error;
 use std::fs::{create_dir, DirEntry, File};
 use std::io::Read;
-use std::path::PathBuf;
+use std::path::{PathBuf, Path};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
 use std::{env, fs};
@@ -150,25 +150,29 @@ fn main() {
         for r in rdr.records() {
             let r = r.unwrap();
             let year;
-            let mut range = 4;
-            if range > r[8].len() {
-                range = r[8].len();
-            }
             // found an entry called '1967-09' that was crashing here..what does 1967-09 even mean??
             match parse(&r[8]) {
                 Ok(d) => {
                     year = d.year();
                 }
-                Err(_) => match parse(&r[8][0..range]) {
-                    Ok(d) => {
-                        year = d.year();
+                // so apparently dateparser can't actually parse just years
+                Err(_) => {
+                    if r[8].len() >= 4 {
+                        match (&r[8][0..4]).parse::<i32>() {
+                            Ok(y) => { year = y }
+                            Err(_) => { year = 1666; }
+                        }
                     }
-                    Err(_) => {
+                    else {
                         year = 1666;
                     }
                 },
             }
             let duration = r[12].parse::<u32>().unwrap() as f64 / 1000.0;
+            let old_filename = format!(
+                "{}-{}(1666)-D{:0>2}-T{:0>2}-{}.ogg",
+                &r[3], &r[5], &r[10], &r[11], &r[1]
+            );
             // artist - album (year) - disc - track - track name
             let mut filename = format!(
                 "{}-{}({})-D{:0>2}-T{:0>2}-{}.ogg",
@@ -210,8 +214,20 @@ fn main() {
                 filename
             );
             // don't download existing files
+            let mut old_path = path.clone();
+            old_path.push(&old_filename);
             path.push(&filename);
             if path.exists() {
+                if old_path.exists() {
+                    // delete stupid (1666) albums that i thought wouldn't happen
+                    info!("deleting old file '{}' ...", &old_path.display());
+                    match fs::remove_file(&old_path) {
+                        Ok(_) => {}
+                        Err(e) => {
+                            warn!("error deleting '{}' : {}",&old_path.display(), e.to_string());
+                        }
+                    }
+                }
                 info!("file exists '{}', skipping...", &path.display());
                 entries.push(
                     m3u::path_entry(encode(&rel_path))
@@ -219,6 +235,25 @@ fn main() {
                 );
                 path.pop();
                 continue;
+            }
+            else {
+                // rename stupid (1666) albums that i thought wouldn't happen
+                if old_path.exists() {
+                    match fs::rename(&old_path, &path) {
+                        Ok(_) => {
+                            info!("renamed '{}' to '{}' ...", &old_path.display(), &path.display());
+                            entries.push(
+                                m3u::path_entry(encode(&rel_path))
+                                    .extend(duration, format!("{} - {}", &r[3], &r[1])),
+                            );
+                            path.pop();
+                            continue;
+                        }
+                        Err(e) => {
+                            warn!("error renaming '{}' : {} ",&old_path.display(), e.to_string());
+                        }
+                    }
+                }
             }
             let id = spotify_uri
                 .captures(&r[0])
