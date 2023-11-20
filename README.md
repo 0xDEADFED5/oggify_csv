@@ -20,10 +20,6 @@ Tracks are named like this: `{artist}-{album}(year)-{disc}-{track}-{track name}.
 
 For instance: `Bil_Bless-Life_Mechanism_(1_of_2)(2009)-D01-T02-Wanting_You.ogg`
 
-update 2023-09-14:
-
-if file name length is > 140, files are named {artist} - {track name}.ogg
-
 adjust as needed.
 
 ```
@@ -54,3 +50,16 @@ I'm sharing this is so that people don't pay for malware to do the same thing.
 Fuck no, I spent as much of my life on this shit thing as I ever intend to.
 If it's missing functionality or buggy, fix it.
 Pull requests to make the code uglier might be accepted.
+
+## Changelog
+
+Well, I didn't really plan on updating this piece of shit, but I did. yah, this changelog sucks because I'm just adding it 19 November.
+
+2023-14-09:
+if file name length is > 140, files are named {artist} - {track name}.ogg  
+
+2023-19-11:
+previous update changed how album years are done.  
+i don't know why i thought dateparser could parse years as a date, but it seemed reasonable at the time.  
+in fact it cannot, so a bunch of tracks got named with album year as 1666, a value that i didn't think would get used.
+this is fixed, and old tracks will be renamed automatically without redownloading them.
