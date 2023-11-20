@@ -66,7 +66,7 @@ this is fixed, and old tracks will be renamed automatically without redownloadin
 
 sometimes the metadata kinda sucks, too. take this wordy filename for example:  
 
-MDC-Millions_of_Dead_Cops_-_Millennium_Edition_(Remastered)(1980)-D01-T07-John_Wayne_Was_a_Nazi_-_Millions_of_Dead_Cops_-_Full_Length.ogg  
+MDC-Millions_of_Dead_Cops_-\_Millennium_Edition_(Remastered)(1980)-D01-T07-John_Wayne_Was_a_Nazi\_-\_Millions_of_Dead_Cops\_-_Full_Length.ogg  
 
 yes, the track name really is "John Wayne Was a Nazi - Millions of Dead Cops - Full Length".  why? fuck if i know, but John Wayne was kind of a Nazi.
 
