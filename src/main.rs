@@ -169,7 +169,7 @@ fn main() {
                 },
             }
             let duration = r[12].parse::<u32>().unwrap() as f64 / 1000.0;
-            let old_filename = format!(
+            let mut old_filename = format!(
                 "{}-{}(1666)-D{:0>2}-T{:0>2}-{}.ogg",
                 &r[3], &r[5], &r[10], &r[11], &r[1]
             );
@@ -208,6 +208,8 @@ fn main() {
             }
             filename = filename.replace(", ", ",");
             filename = sanitize(&filename);
+            old_filename = old_filename.replace(", ", ",");
+            old_filename = sanitize(&old_filename);
             let rel_path = format!(
                 "{}/{}",
                 path.file_stem().unwrap().to_string_lossy(),
