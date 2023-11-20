@@ -63,6 +63,8 @@ previous update changed how album years are done.
 i don't know why i thought dateparser could parse years as a date, but it seemed reasonable at the time.  
 in fact it cannot, so a bunch of tracks got named with album year as 1666, a value that i didn't think would get used.  
 this is maybe fixed, and old tracks might be renamed automatically without redownloading them.  
+update: it's kinda fucked, but i can't screw with it right now.  downloaded tracks now will have the right name.  
+if you run this version over a previous version, run it again after it finishes and it will clean up the old shitty filenames.
 
 sometimes the metadata kinda sucks, too. take this wordy filename for example:  
 
