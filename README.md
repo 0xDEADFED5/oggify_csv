@@ -61,8 +61,9 @@ if file name length is > 140, files are named {artist} - {track name}.ogg
 2023-19-11:
 previous update changed how album years are done.  
 i don't know why i thought dateparser could parse years as a date, but it seemed reasonable at the time.  
-in fact it cannot, so a bunch of tracks got named with album year as 1666, a value that i didn't think would get used.
-this is fixed, and old tracks will be renamed automatically without redownloading them.
+in fact it cannot, so a bunch of tracks got named with album year as 1666, a value that i didn't think would get used.  
+this is fixed, and old tracks will be renamed automatically without redownloading them.  
+
 edit - actually, it's only sometimes renaming old files without re-downloading, i might have another go at fixing it.  or i might not, who fuckin knows.
 
 sometimes the metadata kinda sucks, too. take this wordy filename for example:  
