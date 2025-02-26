@@ -1,4 +1,14 @@
 # oggify_csv
+
+## February 26, 2025...archiving this repo
+
+This is some old busted code that most likely doesn't work on current versions of Rust.
+
+I used it a couple times and never intend to look at this code again, so I'm archiving it.
+
+Cheers!
+
+-------------------------------
 Update 7 November, 2023:  I broke it yesterday, oops.  Also, fix file length issues due to like 50 artists on one track.
 
 Download Spotify CSV playlists to M3U + Ogg Vorbis (with a premium account).
